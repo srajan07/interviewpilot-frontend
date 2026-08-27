@@ -4,140 +4,109 @@ import { registerUser } from "../../services/authService";
 
 const Register = () => {
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState({ fullName: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
-
     if (!formData.fullName || !formData.email || !formData.password) {
       setError("Please fill all fields");
       return;
     }
-
     try {
       setLoading(true);
-
       await registerUser(formData);
-
       navigate("/login");
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          err.message ||
-          "Registration failed"
-      );
+      setError(err.response?.data?.message || err.message || "Registration failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F5F0] px-4">
+      <div className="w-full max-w-sm">
+       <div className="text-center mb-8 space-y-2">
+  <img
+    src="/src/assets/logo.png"
+    alt="Learnlog logo"
+    className="h-12 mx-auto object-contain"
+  />
+  <h1 className="text-2xl font-bold text-[#111827] tracking-tight">Create Account</h1>
+  <p className="text-sm text-[#6B7280]">Start your Learnlog journey</p>
+</div>
 
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Create Account
-          </h1>
+        {/* Card */}
+        <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-md p-7 space-y-5">
+          {error && (
+            <div className="text-xs bg-[#FEE2E2] border border-[#FCA5A5] text-[#DC2626] p-3 rounded-lg font-medium">
+              {error}
+            </div>
+          )}
 
-          <p className="text-gray-500 mt-2">
-            Start your InterviewPilot journey
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-[#374151]">Full Name</label>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+                autoComplete="name"
+                placeholder="Your full name"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-[#374151]">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                autoComplete="email"
+                placeholder="you@example.com"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-[#374151]">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                autoComplete="new-password"
+                placeholder="Create a password"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full mt-1"
+            >
+              {loading ? "Creating account…" : "Create Account →"}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-[#9CA3AF] pt-1">
+            Already have an account?{" "}
+            <Link to="/login" className="text-[#1E3A5F] font-semibold hover:underline">
+              Sign In
+            </Link>
           </p>
         </div>
-
-        {error && (
-          <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-
-          {/* Full Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name
-            </label>
-
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email
-            </label>
-
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Password
-            </label>
-
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Create a password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 rounded-lg transition"
-          >
-            {loading ? "Creating Account..." : "Create Account"}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-500 mt-6">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-blue-600 font-medium hover:underline"
-          >
-            Login
-          </Link>
-        </p>
-
       </div>
     </div>
   );
