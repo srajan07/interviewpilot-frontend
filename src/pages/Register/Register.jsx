@@ -37,7 +37,7 @@ const Register = () => {
   <img
     src="/src/assets/logo.png"
     alt="Learnlog logo"
-    className="h-12 mx-auto object-contain"
+    className="h-8 sm:h-9 mx-auto object-contain"
   />
   <h1 className="text-2xl font-bold text-[#111827] tracking-tight">Create Account</h1>
   <p className="text-sm text-[#6B7280]">Start your Learnlog journey</p>

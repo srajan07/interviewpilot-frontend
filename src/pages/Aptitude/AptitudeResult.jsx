@@ -37,7 +37,7 @@ function AptitudeResult() {
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <Link to="/aptitude" className="btn-primary text-xs">Retake Test ↺</Link>
           <Link to="/dashboard" className="btn-secondary text-xs">Back to Dashboard</Link>
         </div>

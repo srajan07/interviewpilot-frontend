@@ -131,13 +131,10 @@ function MyJourney() {
 
         {loading && (
           <div className="py-16 text-center">
-
-            <div className="w-7 h-7 mx-auto border-2 border-[#D9DCE1] border-t-[#253044] rounded-full animate-spin" />
-
+            <div className="spinner mx-auto" />
             <p className="mt-4 text-sm text-[#8A8F96]">
               Loading your journey...
             </p>
-
           </div>
         )}
 
@@ -297,7 +294,7 @@ function MyJourney() {
 
                     {/* ACTIONS */}
 
-                    <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-[#ECEDE9]">
+                    <div className="flex flex-wrap items-center justify-between gap-3 mt-6 pt-4 border-t border-[#ECEDE9]">
 
                       <Link
                         to={`/community/${post._id}`}

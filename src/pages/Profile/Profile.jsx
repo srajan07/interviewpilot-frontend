@@ -51,45 +51,43 @@ function Profile() {
     : "Recently";
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14 space-y-8">
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14 space-y-8 text-[#20242B]">
 
       {/* Header */}
-      <div className="flex items-center justify-between gap-6 pb-6 border-b border-[#E5E7EB]">
-        <div className="space-y-1">
-          <p className="section-label">Account</p>
-          <h1 className="text-2xl font-bold text-[#111827] tracking-tight">Profile & Settings</h1>
-          <p className="text-sm text-[#6B7280]">Manage your account and view your progress.</p>
+      <div className="flex items-center justify-between gap-4 pb-6 border-b border-[#E2E3DE]">
+        <div className="space-y-1 min-w-0">
+          <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">Account</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-[#20242B] tracking-tight">Profile &amp; Settings</h1>
+          <p className="text-sm text-[#70757D]">Manage your account details and view your activity summary.</p>
         </div>
-        <div className="w-14 h-14 rounded-2xl bg-[#1E3A5F] text-white flex items-center justify-center text-2xl font-bold shadow-md shrink-0">
+        <div className="w-12 h-12 rounded-full bg-[#253044] text-white flex items-center justify-center text-lg font-semibold shrink-0">
           {userInitial}
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {[
-          { label: "Journey Posts", value: stats.journeyPostsCount },
+          { label: "Journey Notes", value: stats.journeyPostsCount },
           { label: "Mock Tests", value: stats.aptitudeAttemptsCount },
           { label: "Interviews", value: stats.interviewsCompleted },
         ].map((stat) => (
-          <div key={stat.label} className="bg-white rounded-xl border border-[#E5E7EB] p-4 text-center"
-            style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-            <div className="text-2xl font-bold text-[#1E3A5F]">{stat.value}</div>
-            <div className="text-xs text-[#9CA3AF] mt-0.5 font-medium">{stat.label}</div>
+          <div key={stat.label} className="bg-[#FCFCF9] rounded-xl border border-[#E2E3DE] p-4 text-center min-w-0">
+            <div className="text-xl sm:text-2xl font-bold text-[#20242B]">{stat.value}</div>
+            <div className="text-xs text-[#8A8F96] mt-1 font-medium leading-tight">{stat.label}</div>
           </div>
         ))}
       </div>
 
       {/* Profile Form */}
-      <div className="bg-white rounded-xl border border-[#E5E7EB] p-6 space-y-5"
-        style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-        <p className="section-label">Account Details</p>
+      <div className="bg-[#FCFCF9] rounded-xl border border-[#E2E3DE] p-6 space-y-5">
+        <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">Account Details</p>
 
         {msg.text && (
           <div className={`p-3 rounded-lg text-xs font-semibold border ${
             msg.type === "success"
-              ? "bg-[#DCFCE7] border-[#86EFAC] text-[#16A34A]"
-              : "bg-[#FEE2E2] border-[#FCA5A5] text-[#DC2626]"
+              ? "bg-[#E6F4EA] border-[#B7E1CD] text-[#137333]"
+              : "bg-[#F8EEEE] border-[#E7CECE] text-[#A55D5D]"
           }`}>
             {msg.text}
           </div>
@@ -97,39 +95,39 @@ function Profile() {
 
         <form onSubmit={handleUpdateProfile} className="space-y-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#374151]">Name</label>
+            <label className="text-xs font-semibold text-[#20242B]">Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-sm rounded-lg"
+              className="w-full px-3.5 py-2.5 text-sm bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl text-[#20242B] outline-none focus:border-[#9AA5B5]"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#374151]">Email</label>
+            <label className="text-xs font-semibold text-[#20242B]">Email</label>
             <input
               type="email"
               value={user?.email || ""}
               disabled
-              className="w-full px-3.5 py-2.5 text-sm rounded-lg opacity-60 cursor-not-allowed bg-[#F5F5F0]"
+              className="w-full px-3.5 py-2.5 text-sm bg-[#F0F1EC] border border-[#E2E3DE] rounded-xl text-[#70757D] cursor-not-allowed"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-[#374151]">Member Since</label>
-            <p className="text-sm text-[#6B7280]">{createdDate}</p>
+            <label className="text-xs font-semibold text-[#20242B]">Member Since</label>
+            <p className="text-sm text-[#70757D]">{createdDate}</p>
           </div>
 
-          <div className="pt-4 flex items-center justify-between border-t border-[#F3F4F6]">
-            <button type="submit" disabled={saving} className="btn-primary text-xs">
+          <div className="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#E2E3DE]">
+            <button type="submit" disabled={saving} className="btn-primary">
               {saving ? "Saving…" : "Update Profile"}
             </button>
             <button
               type="button"
               onClick={logout}
-              className="text-xs font-semibold text-[#DC2626] hover:underline"
+              className="text-xs font-semibold text-[#A55D5D] hover:underline"
             >
               Logout
             </button>

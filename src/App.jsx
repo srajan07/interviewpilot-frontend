@@ -5,21 +5,21 @@ import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AppLayout from "./components/common/AppLayout";
-
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import PracticePage from "./pages/Practice/PracticePage";
 import CommunityPage from "./pages/Community/CommunityPage";
 import CreatePost from "./pages/Community/CreatePost";
 import MyJourney from "./pages/Community/MyJourney";
 import EditPost from "./pages/Community/EditPost";
 import PostDetail from "./pages/Community/PostDetail";
-
+import VerifyOtp from "./pages/VerifyOtp";
 import AptitudeMock from "./pages/Aptitude/AptitudeMock";
 import AptitudeResult from "./pages/Aptitude/AptitudeResult";
 import StartInterview from "./pages/Interview/StartInterview";
 import InterviewSession from "./pages/Interview/InterviewSession";
 import InterviewReport from "./pages/Interview/InterviewReport";
 import Profile from "./pages/Profile/Profile";
-
+import ResetPassword from "./pages/ResetPassword";
 function App() {
   return (
     <BrowserRouter>
@@ -50,7 +50,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+           <Route
+  path="/verify-otp"
+  element={<VerifyOtp />}
+/>
+<Route
+  path="/reset-password"
+  element={<ResetPassword />}
+/>
         {/* COMMUNITY ROUTES */}
         <Route
           path="/community"
@@ -124,7 +131,10 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+         <Route
+  path="/forgot-password"
+  element={<ForgotPassword />}
+/>
         {/* INTERVIEW PRACTICE ROUTES */}
         <Route
           path="/interview"

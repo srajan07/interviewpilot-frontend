@@ -1,39 +1,38 @@
+/* =========================================
+   InterviewPilot - App Global Styles
+   ========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* ─── Design Tokens (Slate & Teal) ─── */
+/* ─── Learnlog Design Tokens (Restored Calm Palette) ─── */
 :root {
-  --bg-app: #E7E9EC;
-  --bg-surface: #F8F9FA;
-  --bg-muted: #DDE0E4;
-  --bg-input: #EEF0F2;
+  --bg-app: #F7F7F3;
+  --bg-surface: #FCFCF9;
+  --bg-secondary: #F0F1EC;
+  --bg-muted: #F0F1EC;
+  --bg-input: #FCFCF9;
 
-  --text-primary: #171A21;
-  --text-secondary: #565B66;
-  --text-muted: #8B909B;
+  --text-primary: #20242B;
+  --text-secondary: #70757D;
+  --text-muted: #8A8F96;
 
-  --border: #D4D8DD;
-  --border-strong: #BCC1C9;
+  --border: #E2E3DE;
+  --border-strong: #D2D3CE;
 
-  --blue-dark: #0F5C56;
-  --blue-hover: #0C4A45;
-  --blue-light: #D3EDE9;
-  --blue-mid: #7FC4BB;
+  --btn-primary: #253044;
+  --btn-hover: #1D2636;
 
-  --green: #3F8A4D;
-  --green-light: #E1F0E2;
-  --red: #B5453B;
-  --red-light: #F7E5E2;
-  --amber: #B07A1E;
-  --amber-light: #F5EAD3;
+  --red: #A55D5D;
+  --red-light: #F8EEEE;
+  --red-border: #E7CECE;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --green: #587A63;
+  --green-light: #ECEFEA;
 
-  --shadow-sm: 0 1px 2px rgba(15, 20, 30, 0.06);
-  --shadow-md: 0 2px 8px rgba(15, 20, 30, 0.08), 0 1px 2px rgba(15, 20, 30, 0.04);
-  --shadow-lg: 0 4px 16px rgba(15, 20, 30, 0.10), 0 1px 4px rgba(15, 20, 30, 0.06);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
 }
 
 /* ─── Reset & Base ─── */
@@ -60,6 +59,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-app);
   color: var(--text-primary);
+  overflow-x: hidden;
 }
 
 body {
@@ -68,6 +68,19 @@ body {
   background-color: var(--bg-app);
   color: var(--text-primary);
   line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Prevent images from ever exceeding viewport width */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Prevent long URLs, words, or code from causing overflow */
+p, li, td, th, h1, h2, h3, h4, h5, h6, span, blockquote {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 a {
@@ -80,34 +93,14 @@ a {
   background-color: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .card-surface-elevated {
   background-color: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-}
-
-/* Frosted variants — use on cards that float over busy or bright
-   content (modals, sticky headers, hero overlays). */
-.card-surface-frosted {
-  background-color: rgba(248, 249, 250, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-}
-
-.card-surface-elevated-frosted {
-  background-color: rgba(248, 249, 250, 0.72);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 2px 8px rgba(32, 36, 43, 0.03);
 }
 
 /* ─── Buttons ─── */
@@ -116,26 +109,19 @@ a {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background-color: var(--blue-dark);
+  background-color: var(--btn-primary);
   color: #ffffff;
   border: none;
   border-radius: var(--radius-sm);
   padding: 9px 18px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 13px;
-  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
-  box-shadow: 0 1px 3px rgba(15, 92, 86, 0.25);
+  transition: background-color 0.15s ease;
 }
 
 .btn-primary:hover {
-  background-color: var(--blue-hover);
-  box-shadow: 0 2px 6px rgba(15, 92, 86, 0.30);
-}
-
-.btn-primary:active {
-  transform: translateY(1px);
+  background-color: var(--btn-hover);
 }
 
 .btn-primary:disabled {
@@ -150,7 +136,7 @@ a {
   gap: 6px;
   background-color: var(--bg-surface);
   color: var(--text-primary);
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 9px 18px;
   font-weight: 500;
@@ -160,8 +146,8 @@ a {
 }
 
 .btn-secondary:hover {
-  background-color: var(--bg-muted);
-  border-color: var(--text-muted);
+  background-color: var(--bg-secondary);
+  border-color: var(--border-strong);
 }
 
 .btn-secondary:disabled {
@@ -173,9 +159,9 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
+  background-color: var(--bg-surface);
   color: var(--red);
-  border: 1px solid var(--red);
+  border: 1px solid var(--red-border);
   border-radius: var(--radius-sm);
   padding: 9px 18px;
   font-weight: 500;
@@ -200,7 +186,7 @@ textarea {
   font-family: inherit;
   background-color: var(--bg-input);
   color: var(--text-primary);
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -209,8 +195,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--blue-dark);
-  box-shadow: 0 0 0 3px rgba(15, 92, 86, 0.10);
+  border-color: #9AA5B5;
+  box-shadow: 0 0 0 2px #D9E3F0;
 }
 
 /* ─── Category / Tag Badge ─── */
@@ -220,20 +206,19 @@ textarea:focus {
   padding: 3px 10px;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  background-color: var(--blue-light);
-  color: var(--blue-dark);
-  border: 1px solid var(--blue-mid);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
 }
 
 /* ─── Spinner ─── */
 .spinner {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border: 2px solid var(--border);
-  border-top-color: var(--blue-dark);
+  border-top-color: var(--btn-primary);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -244,11 +229,11 @@ textarea:focus {
   }
 }
 
-/* ─── Section Dividers ─── */
+/* ─── Section Labels ─── */
 .section-label {
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
 }

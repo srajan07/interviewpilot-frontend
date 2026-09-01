@@ -120,7 +120,7 @@ function InterviewSession() {
           ></textarea>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-[#F3F4F6]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#F3F4F6]">
           <button
             onClick={() => setCurrentIndex((p) => Math.max(0, p - 1))}
             disabled={currentIndex === 0 || isSubmitting}
@@ -142,7 +142,7 @@ function InterviewSession() {
               disabled={isSubmitting}
               className="px-6 py-2 bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold text-xs rounded-lg transition-colors disabled:opacity-50"
             >
-              {isSubmitting ? "Submitting…" : "Finish & Submit ✓"}
+              {isSubmitting ? "Submitting…" : "Finish &amp; Submit ✓"}
             </button>
           )}
         </div>

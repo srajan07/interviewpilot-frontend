@@ -178,7 +178,7 @@ function InterviewReport() {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <Link to="/interview" className="btn-secondary text-xs">Retake Interview</Link>
         <Link to="/dashboard" className="btn-primary text-xs">Back to Dashboard →</Link>
       </div>

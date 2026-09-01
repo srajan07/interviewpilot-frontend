@@ -52,7 +52,7 @@ function PracticePage() {
               <Link
                 key={option.to}
                 to={option.to}
-                className="group flex flex-col sm:flex-row sm:items-center justify-between gap-5 bg-[#FCFCF9] border border-[#E2E3DE] rounded-2xl p-5 sm:p-6 hover:border-[#C7CBD1] hover:shadow-[0_8px_24px_rgba(32,36,43,0.05)] transition-all duration-200"
+                className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFCF9] border border-[#E2E3DE] rounded-2xl p-5 sm:p-6 hover:border-[#C7CBD1] hover:shadow-[0_8px_24px_rgba(32,36,43,0.05)] transition-all duration-200"
               >
 
                 <div className="flex items-start gap-4 min-w-0">
@@ -71,7 +71,7 @@ function PracticePage() {
                       {option.title}
                     </h2>
 
-                    <p className="mt-1.5 text-sm text-[#70757D] leading-6 max-w-xl">
+                    <p className="mt-1.5 text-sm text-[#70757D] leading-6">
                       {option.desc}
                     </p>
 
@@ -79,7 +79,7 @@ function PracticePage() {
 
                 </div>
 
-                <span className="text-sm font-medium text-[#59616B] group-hover:text-[#253044] transition-colors whitespace-nowrap shrink-0">
+                <span className="text-sm font-medium text-[#59616B] group-hover:text-[#253044] transition-colors whitespace-nowrap shrink-0 sm:ml-4">
                   {option.cta}
                 </span>
 

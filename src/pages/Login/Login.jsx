@@ -38,7 +38,7 @@ function Login() {
   <img
     src="/src/assets/logo.png"
     alt="Learnlog logo"
-    className="h-12 mx-auto object-contain"
+    className="h-8 sm:h-9 mx-auto object-contain"
   />
   <p className="text-sm text-[#6B7280]">Sign in to your workspace</p>
     </div>
@@ -88,6 +88,14 @@ function Login() {
                   {showPassword ? "Hide" : "Show"}
                 </button>
               </div>
+              <div className="text-right">
+  <Link
+    to="/forgot-password"
+    className="text-sm text-[#70757D] hover:text-[#253044] transition-colors"
+  >
+    Forgot password?
+  </Link>
+</div>
             </div>
 
             <button
