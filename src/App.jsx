@@ -3,32 +3,53 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
+
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AppLayout from "./components/common/AppLayout";
+
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
-import PracticePage from "./pages/Practice/PracticePage";
+import VerifyOtp from "./pages/VerifyOtp";
+import ResetPassword from "./pages/ResetPassword";
+
 import CommunityPage from "./pages/Community/CommunityPage";
 import CreatePost from "./pages/Community/CreatePost";
 import MyJourney from "./pages/Community/MyJourney";
 import EditPost from "./pages/Community/EditPost";
 import PostDetail from "./pages/Community/PostDetail";
-import VerifyOtp from "./pages/VerifyOtp";
-import AptitudeMock from "./pages/Aptitude/AptitudeMock";
-import AptitudeResult from "./pages/Aptitude/AptitudeResult";
-import StartInterview from "./pages/Interview/StartInterview";
-import InterviewSession from "./pages/Interview/InterviewSession";
-import InterviewReport from "./pages/Interview/InterviewReport";
+
 import Profile from "./pages/Profile/Profile";
-import ResetPassword from "./pages/ResetPassword";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* PUBLIC */}
+        {/* =========================
+            PUBLIC ROUTES
+        ========================== */}
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* PROTECTED APP ROUTES */}
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path="/verify-otp"
+          element={<VerifyOtp />}
+        />
+
+        <Route
+          path="/reset-password"
+          element={<ResetPassword />}
+        />
+
+        {/* =========================
+            PROTECTED ROUTES
+        ========================== */}
+
+        {/* Home / Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -40,25 +61,10 @@ function App() {
           }
         />
 
-        <Route
-          path="/practice"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <PracticePage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-           <Route
-  path="/verify-otp"
-  element={<VerifyOtp />}
-/>
-<Route
-  path="/reset-password"
-  element={<ResetPassword />}
-/>
-        {/* COMMUNITY ROUTES */}
+        {/* =========================
+            COMMUNITY
+        ========================== */}
+
         <Route
           path="/community"
           element={
@@ -69,6 +75,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/community/create"
           element={
@@ -79,6 +86,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/community/me"
           element={
@@ -89,6 +97,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/community/edit/:id"
           element={
@@ -99,6 +108,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/community/:id"
           element={
@@ -110,64 +120,10 @@ function App() {
           }
         />
 
-        {/* APTITUDE ROUTES */}
-        <Route
-          path="/aptitude"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <AptitudeMock />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/aptitude/result"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <AptitudeResult />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-         <Route
-  path="/forgot-password"
-  element={<ForgotPassword />}
-/>
-        {/* INTERVIEW PRACTICE ROUTES */}
-        <Route
-          path="/interview"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <StartInterview />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/interview/session/:sessionId"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <InterviewSession />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/interview/report/:id"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <InterviewReport />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+        {/* =========================
+            PROFILE
+        ========================== */}
 
-        {/* PROFILE ROUTE */}
         <Route
           path="/profile"
           element={
@@ -179,9 +135,19 @@ function App() {
           }
         />
 
-        {/* DEFAULT FALLBACKS */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        {/* =========================
+            DEFAULT ROUTES
+        ========================== */}
+
+        <Route
+          path="/"
+          element={<Navigate to="/dashboard" replace />}
+        />
+
+        <Route
+          path="*"
+          element={<Navigate to="/dashboard" replace />}
+        />
       </Routes>
     </BrowserRouter>
   );

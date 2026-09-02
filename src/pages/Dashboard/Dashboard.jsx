@@ -1,205 +1,448 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
-import api from "../../services/api";
 import { getPosts } from "../../services/communityService";
+
+import thinkingDev from "../../assets/illustrations/thinking-dev.png";
+import communityDev from "../../assets/illustrations/community-dev.png";
+import samplePost from "../../assets/sample.png";
 
 function Dashboard() {
   const { user } = useAuth();
+
   const [recentPosts, setRecentPosts] = useState([]);
-  const [activityStats, setActivityStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const displayName = user?.name || user?.fullName || "Learner";
   const userInitial = displayName.charAt(0).toUpperCase();
 
   useEffect(() => {
-    async function loadDashboardData() {
+    const loadPosts = async () => {
       try {
-        const [dashRes, postsRes] = await Promise.allSettled([
-          api.get("/dashboard"),
-          getPosts(),
-        ]);
-        if (dashRes.status === "fulfilled" && dashRes.value.data?.data) {
-          setActivityStats(dashRes.value.data.data);
+        const response = await getPosts();
+
+        if (response?.data) {
+          setRecentPosts(response.data.slice(0, 3));
         }
-        if (postsRes.status === "fulfilled" && postsRes.value.data) {
-          setRecentPosts(postsRes.value.data.slice(0, 3));
-        }
-      } catch (err) {
-        console.error("Dashboard load error:", err);
+      } catch (error) {
+        console.error("Failed to load recent posts:", error);
       } finally {
         setLoading(false);
       }
-    }
-    loadDashboardData();
+    };
+
+    loadPosts();
   }, []);
 
-  const stats = [
-    { label: "Mock tests", value: activityStats?.aptitudeAttemptsCount || 0 },
-    { label: "Interviews", value: activityStats?.interviewsCompleted || 0 },
-    { label: "Community posts", value: recentPosts.length },
-  ];
-
   return (
-    <main className="w-full min-h-screen bg-[#F7F7F3] text-[#20242B]">
-      <div className="w-full max-w-4xl mx-auto px-5 sm:px-8 py-10 sm:py-14">
+    <main className="min-h-screen bg-[#F7F7F3] text-[#20242B]">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
 
-        {/* Greeting */}
-        <section className="pb-8 border-b border-[#E2E3DE] mb-8">
-          <div className="flex items-center justify-between gap-4">
-            <div className="space-y-1.5 min-w-0">
-              <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">
-                Workspace
-              </p>
-              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#20242B]">
-                Welcome back, <span className="break-words">{displayName}</span>
-              </h1>
-              <p className="text-sm text-[#70757D]">
-                Continue where you left off.
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-[#ECEFEA] text-[#587A63] flex items-center justify-center text-sm font-semibold shrink-0">
-              {userInitial}
-            </div>
-          </div>
-        </section>
+        {/* =====================================================
+            WELCOME
+        ====================================================== */}
+        <section className="mb-12">
+          <div className="bg-[#FCFCF9] border border-[#E2E3DE] rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] lg:grid-cols-[1fr_340px] items-center">
 
-        {/* Stats Row */}
-        {activityStats && (
-          <section className="mb-10">
-            <div className="grid grid-cols-3 gap-3 sm:gap-4">
-              {stats.map(({ label, value }) => (
-                <div
-                  key={label}
-                  className="bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl p-4 sm:p-5 min-w-0"
-                >
-                  <div className="text-xl sm:text-2xl font-semibold text-[#20242B]">
-                    {value}
+              {/* Content */}
+              <div className="p-6 sm:p-8 lg:p-10">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-10 h-10 rounded-full bg-[#ECEFEA] text-[#587A63] flex items-center justify-center font-semibold">
+                    {userInitial}
                   </div>
-                  <div className="text-xs text-[#8A8F96] mt-1 font-medium">
-                    {label}
-                  </div>
+
+                  <span className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">
+                    Welcome back
+                  </span>
                 </div>
-              ))}
+
+                <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-semibold tracking-tight leading-tight">
+                  Hi, {displayName}.
+                </h1>
+
+                <p className="mt-4 text-sm sm:text-base text-[#70757D] leading-relaxed max-w-xl">
+                  Keep learning at your own pace. When something finally
+                  makes sense, leave a note for the next person.
+                </p>
+
+                <Link
+                  to="/community/create"
+                  className="inline-flex mt-6 items-center justify-center rounded-lg bg-[#253044] !text-white px-5 py-3 text-sm font-medium hover:bg-[#1D2636] transition-colors"
+                >
+                  Share something you learned →
+                </Link>
+              </div>
+
+              {/* Illustration */}
+              <div className="flex justify-center items-end px-6 pt-2 pb-6 md:px-6 md:py-8 lg:px-8">
+                <img
+                  src={thinkingDev}
+                  alt="A developer thinking while learning"
+                  className="w-full max-w-[220px] sm:max-w-[260px] md:max-w-[280px] lg:max-w-[320px] h-auto object-contain"
+                />
+              </div>
+
             </div>
-          </section>
-        )}
-
-        {/* Quick Actions */}
-        <section className="mb-10">
-          <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96] mb-4">
-            Quick actions
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link
-              to="/practice"
-              className="group bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl p-5 hover:border-[#C7CBD1] transition-all block"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-base font-semibold text-[#20242B] group-hover:text-[#253044]">
-                  Practice
-                </h3>
-                <span className="text-xs font-medium text-[#8A8F96] group-hover:text-[#253044] transition-colors">
-                  Start →
-                </span>
-              </div>
-              <p className="text-xs text-[#70757D] leading-relaxed">
-                Interview questions and timed aptitude mock tests.
-              </p>
-            </Link>
-
-            <Link
-              to="/community"
-              className="group bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl p-5 hover:border-[#C7CBD1] transition-all block"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-base font-semibold text-[#20242B] group-hover:text-[#253044]">
-                  Community
-                </h3>
-                <span className="text-xs font-medium text-[#8A8F96] group-hover:text-[#253044] transition-colors">
-                  Explore →
-                </span>
-              </div>
-              <p className="text-xs text-[#70757D] leading-relaxed">
-                Share what you learned. Read others' learning journeys.
-              </p>
-            </Link>
           </div>
         </section>
 
-        {/* Recent Community Notes */}
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">
-              Recent community notes
-            </p>
+        {/* =====================================================
+            NOTES FROM OTHER LEARNERS
+        ====================================================== */}
+        <section className="mb-12">
+
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
+            <div>
+              <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">
+                Community
+              </p>
+
+              <h2 className="mt-1.5 text-xl sm:text-2xl font-semibold tracking-tight">
+                Notes from other learners
+              </h2>
+
+              <p className="mt-2 text-sm text-[#70757D]">
+                See what people are learning and understanding along the way.
+              </p>
+            </div>
+
             <Link
               to="/community"
-              className="text-xs font-medium text-[#253044] hover:underline"
+              className="text-sm font-medium text-[#253044] hover:underline"
             >
-              View all →
+              Explore community →
             </Link>
           </div>
 
           {loading ? (
-            <div className="bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl p-5 flex items-center gap-3 text-xs text-[#8A8F96]">
-              <div className="spinner"></div>
-              <span>Loading notes…</span>
+            <div className="bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl p-5 text-sm text-[#8A8F96]">
+              Loading notes...
             </div>
           ) : recentPosts.length > 0 ? (
-            <div className="space-y-3">
-              {recentPosts.map((post) => (
-                <Link
-                  key={post._id}
-                  to={`/community/${post._id}`}
-                  className="group bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl p-4 flex items-center justify-between gap-4 transition-all hover:border-[#C7CBD1]"
-                >
-                  <div className="space-y-1 min-w-0">
-                    <div className="text-[11px] text-[#8A8F96]">
-                      {post.user?.name || post.user?.fullName || "Learner"}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+              {recentPosts.map((post, index) => {
+                const cardStyles = [
+                  {
+                    bg: "bg-[#EEF3F7]",
+                    border: "border-[#D8E1E8]",
+                    tag: "bg-[#DCE7EE]",
+                  },
+                  {
+                    bg: "bg-[#F3F0E8]",
+                    border: "border-[#E5DED0]",
+                    tag: "bg-[#E8E1D1]",
+                  },
+                  {
+                    bg: "bg-[#EEF1EC]",
+                    border: "border-[#DCE0D8]",
+                    tag: "bg-[#E0E7DB]",
+                  },
+                ];
+
+                const style = cardStyles[index % cardStyles.length];
+
+                return (
+                  <Link
+                    key={post._id}
+                    to={`/community/${post._id}`}
+                    className={`group ${style.bg} border ${style.border} rounded-2xl p-5 sm:p-6 min-w-0 hover:-translate-y-0.5 transition-all duration-200`}
+                  >
+
+                    {/* User */}
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 min-w-0">
+
+                        <div className="w-8 h-8 rounded-full bg-white/70 border border-black/5 flex items-center justify-center text-xs font-semibold text-[#587A63] shrink-0">
+                          {(post.user?.name ||
+                            post.user?.fullName ||
+                            "L")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+
+                        <p className="text-xs text-[#70757D] truncate">
+                          {post.user?.name ||
+                            post.user?.fullName ||
+                            "Learner"}
+                        </p>
+                      </div>
+
+                      <span className="text-[11px] text-[#8A8F96] shrink-0">
+                        Learning note
+                      </span>
                     </div>
-                    <div className="text-sm font-medium text-[#20242B] group-hover:text-[#253044] truncate">
+
+                    {/* Title */}
+                    <h3 className="mt-5 text-base sm:text-lg font-semibold leading-snug text-[#20242B] group-hover:text-[#253044] break-words">
                       {post.title}
+                    </h3>
+
+                    {/* Content */}
+                    {post.content && (
+                      <p className="mt-3 text-sm text-[#70757D] leading-relaxed line-clamp-4">
+                        {post.content}
+                      </p>
+                    )}
+
+                    {/* Tags */}
+                    {post.tags?.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-5">
+                        {post.tags.slice(0, 2).map((tag) => (
+                          <span
+                            key={tag}
+                            className={`rounded-full ${style.tag} px-2.5 py-1 text-[10px] text-[#59616A]`}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Bottom */}
+                    <div className="mt-6 flex items-center justify-between">
+                      <span className="text-xs text-[#70757D]">
+                        A note from a learner
+                      </span>
+
+                      <span className="text-xs font-semibold text-[#253044] group-hover:translate-x-0.5 transition-transform">
+                        Read →
+                      </span>
                     </div>
-                  </div>
-                  <span className="text-xs text-[#8A8F96] group-hover:text-[#253044] shrink-0">
-                    →
-                  </span>
-                </Link>
-              ))}
+
+                  </Link>
+                );
+              })}
+
             </div>
+
           ) : (
-            <div className="bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl p-8 text-center">
-              <p className="text-sm text-[#70757D]">
-                No recent activity yet.{" "}
-                <Link
-                  to="/community/create"
-                  className="font-medium text-[#253044] hover:underline"
-                >
-                  Share your first note →
-                </Link>
-              </p>
+
+            <div className="bg-[#FCFCF9] border border-[#E2E3DE] rounded-2xl p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+
+                <img
+                  src={communityDev}
+                  alt="Developers sharing what they learn"
+                  className="w-36 sm:w-44 h-auto object-contain shrink-0"
+                />
+
+                <div className="text-center sm:text-left">
+
+                  <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">
+                    Start here
+                  </p>
+
+                  <h3 className="mt-1.5 text-lg font-semibold">
+                    Nothing here yet.
+                  </h3>
+
+                  <p className="mt-2 text-sm text-[#70757D] leading-relaxed max-w-md">
+                    Be the first to share something you learned, a mistake
+                    that taught you something, or an idea that finally
+                    clicked.
+                  </p>
+
+                  <Link
+                    to="/community/create"
+                    className="inline-flex mt-4 items-center justify-center rounded-lg bg-[#253044] !text-white px-4 py-2.5 text-sm font-medium hover:bg-[#1D2636] transition-colors"
+                  >
+                    Write a learning note →
+                  </Link>
+
+                </div>
+
+              </div>
             </div>
           )}
+
         </section>
 
-        {/* Footer */}
-        <footer className="pt-8 border-t border-[#E2E3DE]">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#8A8F96]">
-            <p>Small, steady sessions beat cramming. Come back tomorrow.</p>
-            <div className="flex items-center gap-4">
-              <Link to="/practice" className="hover:text-[#20242B]">
-                Practice
+        {/* =====================================================
+            HOW TO WRITE A GOOD POST
+        ====================================================== */}
+        <section className="mb-12">
+
+          <div className="max-w-2xl mb-5">
+            <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">
+              Before you post
+            </p>
+
+            <h2 className="mt-1.5 text-xl sm:text-2xl font-semibold tracking-tight">
+              A good learning post is simple.
+            </h2>
+
+            <p className="mt-2 text-sm text-[#70757D] leading-relaxed">
+              You don't need to write a big tutorial. Tell someone what you
+              were learning, what confused you, and what finally made sense.
+            </p>
+          </div>
+
+          {/* Sample Post */}
+          <article className="bg-[#FCFCF9] border border-[#E2E3DE] rounded-2xl overflow-hidden">
+
+            <div className="p-5 sm:p-7 lg:p-8">
+
+              {/* Author */}
+              <div className="flex items-center gap-3 mb-6">
+
+                <div className="w-10 h-10 rounded-full bg-[#EEF1EA] text-[#587A63] flex items-center justify-center text-sm font-semibold shrink-0">
+                  A
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-[#20242B]">
+                    Ananya
+                  </p>
+
+                  <p className="text-xs text-[#8A8F96]">
+                    A learning note
+                  </p>
+                </div>
+
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl sm:text-2xl font-semibold tracking-tight">
+                Understanding C++ References
+              </h3>
+
+              {/* Learning Story */}
+              <div className="mt-4 max-w-3xl space-y-3">
+
+                <p className="text-sm sm:text-base text-[#70757D] leading-relaxed">
+                  I was confused about references in C++. I thought a
+                  reference created another copy of the variable.
+                </p>
+
+                <p className="text-sm sm:text-base text-[#70757D] leading-relaxed">
+                  What finally clicked was that a reference is just another
+                  name for the same variable.
+                </p>
+
+              </div>
+
+              {/* Code */}
+              <div className="mt-5 max-w-3xl rounded-xl border border-[#E2E3DE] overflow-hidden bg-[#F7F7F3]">
+
+                <div className="px-4 py-2.5 border-b border-[#E2E3DE]">
+                  <span className="text-[11px] uppercase tracking-[0.12em] font-medium text-[#8A8F96]">
+                    Example
+                  </span>
+                </div>
+
+                <pre className="p-4 sm:p-5 text-xs sm:text-sm leading-relaxed text-[#253044] overflow-x-auto">
+{`int x = 5;
+int& ref = x;
+
+ref = 10;
+
+cout << x; // 10`}
+                </pre>
+
+              </div>
+
+              {/* Image */}
+              <div className="mt-5 max-w-3xl">
+                <div className="rounded-xl overflow-hidden border border-[#E2E3DE] bg-[#F7F7F3]">
+                  <img
+                    src={samplePost}
+                    alt="Visual explanation of C++ references"
+                    className="w-full h-auto block"
+                  />
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mt-5">
+
+                <span className="rounded-full bg-[#F0F1EC] px-3 py-1 text-[11px] text-[#70757D]">
+                  C++
+                </span>
+
+                <span className="rounded-full bg-[#F0F1EC] px-3 py-1 text-[11px] text-[#70757D]">
+                  References
+                </span>
+
+                <span className="rounded-full bg-[#F0F1EC] px-3 py-1 text-[11px] text-[#70757D]">
+                  Beginner
+                </span>
+
+              </div>
+
+            </div>
+
+            {/* Note */}
+            <div className="border-t border-[#E2E3DE] bg-[#F7F7F3] px-5 sm:px-7 py-4 sm:py-5">
+
+              <p className="text-xs sm:text-sm text-[#70757D] leading-relaxed">
+                <span className="font-semibold text-[#20242B]">
+                  What makes this useful?
+                </span>{" "}
+                It shares the confusion, explains what finally clicked,
+                and gives an example that another learner can try.
+              </p>
+
+            </div>
+
+          </article>
+        </section>
+
+        {/* =====================================================
+            SMALL HUMAN THOUGHT
+        ====================================================== */}
+        <section className="mt-12 sm:mt-14">
+
+          <div className="border-t border-[#E2E3DE] pt-8">
+            <div className="max-w-2xl mx-auto text-center px-4">
+
+              <p className="text-xs uppercase tracking-[0.16em] text-[#8A8F96]">
+                A small thought
+              </p>
+
+              <h2 className="mt-2 text-xl sm:text-2xl font-semibold tracking-tight">
+                You don't have to know everything to help someone.
+              </h2>
+
+              <p className="mt-3 text-sm sm:text-base text-[#70757D] leading-relaxed">
+                Sometimes the thing you understood a few minutes ago
+                is exactly what another learner is struggling with.
+              </p>
+
+              <Link
+                to="/community/create"
+                className="inline-flex mt-5 text-sm font-medium text-[#253044] hover:underline"
+              >
+                Share something small →
               </Link>
-              <Link to="/community" className="hover:text-[#20242B]">
-                Community
-              </Link>
-              <Link to="/profile" className="hover:text-[#20242B]">
-                Profile
-              </Link>
+
             </div>
           </div>
+
+        </section>
+
+        {/* =====================================================
+            FOOTER
+        ====================================================== */}
+        <footer className="mt-12 sm:mt-16 border-t border-[#E2E3DE] pt-6 pb-2">
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#8A8F96]">
+
+            <p className="text-center sm:text-left">
+              <span className="font-medium text-[#20242B]">
+                Learnlog
+              </span>{" "}
+              — learn, understand, share what clicked.
+            </p>
+
+            <p className="text-center sm:text-right">
+              Made for people figuring things out.
+            </p>
+
+          </div>
+
         </footer>
 
       </div>

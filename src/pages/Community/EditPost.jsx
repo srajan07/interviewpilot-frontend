@@ -11,9 +11,12 @@ function EditPost() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    image: "",
     tags: "",
   });
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [removeExistingImage, setRemoveExistingImage] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -25,10 +28,16 @@ function EditPost() {
         const response = await getPost(id);
         const post = response.data;
 
+        const currentUserId = (user?._id || user?.id || "").toString();
+        const postAuthorId = post?.user
+          ? (post.user._id ? post.user._id.toString() : post.user.toString())
+          : "";
+
         if (
           user &&
-          post.user?._id &&
-          String(post.user._id) !== String(user.id)
+          currentUserId &&
+          postAuthorId &&
+          postAuthorId !== currentUserId
         ) {
           setError("You are not authorized to edit this post.");
           setLoading(false);
@@ -38,11 +47,14 @@ function EditPost() {
         setFormData({
           title: post.title || "",
           content: post.content || "",
-          image: post.image || "",
           tags: Array.isArray(post.tags)
             ? post.tags.join(", ")
             : "",
         });
+
+        if (post.image) {
+          setImagePreview(post.image);
+        }
       } catch (error) {
         console.error("Failed to load post:", error);
         setError(error.response?.data?.message || "Failed to load post.");
@@ -62,6 +74,31 @@ function EditPost() {
     }));
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file (PNG, JPG, WEBP, GIF).");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be under 5MB.");
+      return;
+    }
+
+    setError("");
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+    setRemoveExistingImage(false);
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview("");
+    setRemoveExistingImage(true);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -74,17 +111,18 @@ function EditPost() {
     setError("");
 
     try {
-      await updatePost(id, {
-        title: formData.title.trim(),
-        content: formData.content.trim(),
-        image: formData.image.trim(),
-        tags: formData.tags
-          ? formData.tags
-              .split(",")
-              .map((tag) => tag.trim())
-              .filter(Boolean)
-          : [],
-      });
+      const payload = new FormData();
+      payload.append("title", formData.title.trim());
+      payload.append("content", formData.content.trim());
+      payload.append("tags", formData.tags);
+
+      if (imageFile) {
+        payload.append("image", imageFile);
+      } else if (removeExistingImage) {
+        payload.append("removeImage", "true");
+      }
+
+      await updatePost(id, payload);
 
       navigate("/community/me");
     } catch (error) {
@@ -183,17 +221,33 @@ function EditPost() {
             <label className="text-sm font-medium text-[#20242B]">
               Image <span className="ml-2 text-xs font-normal text-[#8A8F96]">optional</span>
             </label>
-            <input
-              type="url"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              placeholder="https://example.com/diagram.png"
-              className="w-full px-4 py-3 bg-[#FCFCF9] border border-[#E2E3DE] rounded-xl text-sm outline-none focus:border-[#9AA5B5]"
-            />
-            <p className="text-xs text-[#8A8F96]">
-              Add a screenshot or diagram URL.
-            </p>
+
+            {!imagePreview ? (
+              <label className="flex flex-col items-center justify-center gap-2 w-full px-4 py-8 bg-[#FCFCF9] border border-dashed border-[#E2E3DE] rounded-xl text-sm text-[#8A8F96] cursor-pointer hover:border-[#9AA5B5] transition-colors">
+                <span>Click to upload image (max 5MB)</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+            ) : (
+              <div className="relative max-w-sm overflow-hidden rounded-xl border border-[#E2E3DE]">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-full max-h-56 object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full hover:bg-black/80 transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+            )}
           </div>
 
           {/* TAGS */}
